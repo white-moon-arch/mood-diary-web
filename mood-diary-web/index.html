@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>情绪日记</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📖 新增情绪日记</h1>
+        <div class="card">
+            <div class="item">
+                <label>日记标题</label>
+                <input type="text" id="titleInput" placeholder="今天的主题...">
+            </div>
+
+            <div class="item">
+                <label>选择今日情绪</label>
+                <select id="moodSelect">
+                    <option value="happy">😊 开心</option>
+                    <option value="calm">😌 平静</option>
+                    <option value="sad">😔 低落</option>
+                    <option value="angry">😠 烦躁</option>
+                    <option value="excited">🤩 兴奋</option>
+                    <option value="tired">😴 疲惫</option>
+                    <option value="anxious">😰 焦虑</option>
+                    <option value="moved">🥹 感动</option>
+                    <option value="bored">😑 无聊</option>
+                    <option value="confused">🤔 迷茫</option>
+                </select>
+            </div>
+
+            <div class="item">
+                <input type="checkbox" id="customMoodCheck">
+                <label for="customMoodCheck">启用自定义情绪</label>
+                <input type="text" id="customMoodInput" placeholder="输入你的情绪" style="display:none;margin-top:8px;">
+            </div>
+
+            <div class="item">
+                <label>日记内容</label>
+                <textarea id="contentInput" rows="6" placeholder="写下此刻心情..."></textarea>
+            </div>
+            <button id="saveBtn">保存日记</button>
+            <div style="margin-top:16px;text-align:center;">
+                <a href="list.html"><button style="width:auto;padding:8px 16px;">查看历史日记</button></a>
+                <a href="stats.html"><button style="width:auto;padding:8px 16px;">📊 情绪统计图表</button></a>
+            </div>
+        </div>
+    </div>
+<!-- 顺序不能变：api在前，main在后 -->
+<script src="api.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

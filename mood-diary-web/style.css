@@ -1,0 +1,56 @@
+/* css/main.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft Yahei", sans-serif;
+}
+body {
+    background-color: #f7f5fc;
+    padding: 40px;
+}
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+h1 {
+    color: #5c4b99;
+    margin-bottom:30px;
+    text-align:center;
+}
+.card {
+    background: #fff;
+    border-radius: 16px;
+    padding:28px;
+    box-shadow: 0 2px 10px #e2dff0;
+}
+.item{
+    margin-bottom:20px;
+}
+label{
+    display:block;
+    color:#444;
+    margin-bottom:8px;
+    font-weight:500;
+}
+input,textarea,select{
+    width:100%;
+    border:1px solid #dcd6ec;
+    border-radius:10px;
+    padding:12px;
+    font-size:16px;
+    background:#fcfbff;
+}
+button{
+    width:100%;
+    padding:14px;
+    background:#7b68c7;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:17px;
+    cursor:pointer;
+}
+button:hover{
+    background:#6755b0;
+}

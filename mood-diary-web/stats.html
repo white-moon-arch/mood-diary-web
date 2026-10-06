@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>情绪月度统计</title>
+    <link rel="stylesheet" href="style.css">
+    <!--引入Chart.js图表库 CDN-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 指定月份情绪统计图表</h1>
+        <!--月份选择器组件-->
+        <div style="margin:20px 0;text-align:center;">
+            <label>选择月份：</label>
+            <input type="month" id="monthSelect">
+            <button id="queryBtn">查询统计</button>
+            <div style="margin-top:12px;">
+                <a href="index.html"><button>新建日记</button></a>
+                <a href="list.html"><button>查看日记列表</button></a>
+            </div>
+        </div>
+        <!--图表容器-->
+        <div style="width:500px;height:400px;margin:0 auto;">
+            <canvas id="moodChart"></canvas>
+        </div>
+        <!--空状态提示-->
+        <div id="emptyTip" style="text-align:center;color:#777;font-size:16px;margin-top:30px;display:none;">
+            当前月份暂无日记数据
+        </div>
+    </div>
+<script src="api.js"></script>
+<script>
+const monthSelect = document.getElementById("monthSelect");
+const queryBtn = document.getElementById("queryBtn");
+const emptyTip = document.getElementById("emptyTip");
+const canvasDom = document.getElementById("moodChart");
+
+//默认选中当前年月
+const now = new Date();
+const defaultYM = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+monthSelect.value = defaultYM;
+
+let chartIns = null;
+
+//渲染图表
+async function drawChart(){
+    const ym = monthSelect.value;
+    const res = await getMonthStatsApi(ym);
+    const data = res.data.list;
+    const total = res.data.total;
+
+    //空数据处理
+    if(total ===0){
+        emptyTip.style.display = "block";
+        if(chartIns){
+            chartIns.destroy();
+            chartIns = null;
+        }
+        return;
+    }
+    emptyTip.style.display = "none";
+
+    //销毁旧图表，防止叠加
+    if(chartIns){
+        chartIns.destroy();
+    }
+    const labels = data.map(item=>item.name);
+    const values = data.map(item=>item.value);
+
+    chartIns = new Chart(canvasDom,{
+        type:"pie", //饼图，可以改成bar柱状图
+        data:{
+            labels:labels,
+            datasets:[{
+                data:values,
+                backgroundColor:["#ff7875","#ffc53d","#5cdbd3","#85a5ff","#b37feb"]
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                title:{
+                    display:true,
+                    text:`${ym} 情绪分布统计，总日记：${total}条`
+                }
+            }
+        }
+    })
+}
+
+queryBtn.addEventListener("click",drawChart);
+//页面加载自动查询
+drawChart();
+</script>
+</body>
+</html>
