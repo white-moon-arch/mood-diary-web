@@ -119,3 +119,29 @@ nextBtn.addEventListener("click", () => {
 });
 
 renderList();
+
+// 搜索按钮点击
+document.getElementById("searchBtn").addEventListener("click",()=>{
+  const kw = document.getElementById("searchKeyword").value;
+  const result = searchDiary(kw);
+  renderDiaryList(result); // renderDiaryList是原有渲染列表函数，支持分页
+})
+
+// 导出
+document.getElementById("exportBtn").addEventListener("click", exportDiaryJson);
+
+// 导入文件选择监听
+document.getElementById("importFile").addEventListener("change", async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  try{
+    const msg = await importDiaryJson(file);
+    alert(msg);
+    // 导入完成，刷新列表
+    renderDiaryList(getAllDiary());
+  }catch(err){
+    alert("导入失败："+err);
+  }
+  // 清空文件选择
+  e.target.value = "";
+})

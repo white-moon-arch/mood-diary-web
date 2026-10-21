@@ -93,3 +93,67 @@ async function getMonthStatsApi(yearMonth) {
         }
     }
 }
+
+// 获取全部日记
+function getAllDiary() {
+  return JSON.parse(localStorage.getItem("moodDiaryList")) || [];
+}
+
+//接口6：关键词搜索接口 ======
+function searchDiary(keyword) {
+  const list = getAllDiary();
+  // 空关键词返回全部数据
+  if(!keyword || keyword.trim() === ""){
+    return list;
+  }
+  const kw = keyword.toLowerCase();
+  // 在标题、情绪、日记内容中匹配关键词
+  return list.filter(item => 
+    item.title.toLowerCase().includes(kw) ||
+    item.content.toLowerCase().includes(kw) ||
+    item.mood.toLowerCase().includes(kw)
+  )
+}
+
+// 导出JSON接口
+function exportDiaryJson() {
+  const data = getAllDiary();
+  const jsonStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonStr], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `情绪日记备份_${new Date().toLocaleDateString()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+//3.导入JSON解析接口
+function importDiaryJson(file) {
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      try{
+        const importData = JSON.parse(e.target.result);
+        // 简单校验数据格式
+        if(!Array.isArray(importData)){
+          reject("文件格式错误，必须是日记数组");
+          return;
+        }
+        // 合并导入（可改为覆盖，按需切换）
+        let oldList = getAllDiary();
+        // 简单去重，根据id判断
+        importData.forEach(newItem=>{
+          const exist = oldList.find(i=>i.id === newItem.id);
+          if(!exist) oldList.push(newItem);
+        })
+        localStorage.setItem("diaryList", JSON.stringify(oldList));
+        resolve("导入成功");
+      }catch(err){
+        reject("JSON解析失败,文件损坏");
+      }
+    }
+    reader.readAsText(file);
+  })
+}
+

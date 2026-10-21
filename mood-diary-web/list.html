@@ -19,6 +19,27 @@
 <body>
     <div class="container">
         <h1>📖 历史情绪日记</h1>
+
+        <!-- 在列表页头部新增区域 -->
+        <div class="search-bar" style="display:flex; gap:12px; margin-bottom:20px; align-items:center; width:100%;">
+    <input 
+        type="text" 
+        id="searchKeyword" 
+        placeholder="输入关键词搜索日记..."
+        style="padding:12px 16px; flex: 1; font-size:16px; border: 1px solid #dcdcdc; border-radius:8px; box-sizing:border-box; min-width:200px;"
+    >
+    <button id="searchBtn" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#7b68ee; color:white; cursor:pointer; white-space:nowrap;">搜索</button>
+    <button id="exportBtn" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#7b68ee; color:white; cursor:pointer; white-space:nowrap;">导出全部日记(JSON)</button>
+    <label for="importFile" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#409eff; color:white; cursor:pointer; white-space:nowrap;">
+        导入备份JSON
+        <input type="file" id="importFile" accept=".json" hidden>
+    </label>
+</div>
+
+
+        <!-- 原有日记列表+分页代码保留 -->
+
+
         <div style="text-align:center;margin-bottom:20px;">
             <a href="index.html"><button style="width:auto;padding:8px 16px;">新建日记</button></a>
         </div>
