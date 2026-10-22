@@ -1,8 +1,10 @@
-// list.js 分页代码基础上新增编辑删除逻辑
+// list.js 修复版：搜索 + 分页 + 编辑删除 全联动
 const diaryListDom = document.getElementById("diaryList");
 const pageInfoDom = document.getElementById("pageInfo");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
+const searchBtn = document.getElementById("searchBtn");
+const searchInput = document.getElementById("searchKeyword");
 const editMask = document.getElementById("editMask");
 const editTitle = document.getElementById("editTitle");
 const editMood = document.getElementById("editMood");
@@ -13,15 +15,15 @@ const saveEdit = document.getElementById("saveEdit");
 
 let currentPage = 1;
 const pageSize = 2;
+// 当前展示的数据：搜索结果 / 全部数据
+let currentData = getAllDiary();
 
-async function renderList() {
-    const res = await getDiaryListApi();
-    const diaryData = res.data;
-
-    if (diaryData.length === 0) {
+// 统一渲染函数，只基于 currentData
+function renderDiaryList() {
+    if (currentData.length === 0) {
         diaryListDom.innerHTML = `
             <div class="card" style="text-align:center; color:#888; padding:40px 20px;">
-                暂无情绪日记记录
+                暂无匹配的日记记录
             </div>
         `;
         pageInfoDom.innerText = `第0页`;
@@ -30,17 +32,17 @@ async function renderList() {
         return;
     }
 
-    const maxPage = Math.ceil(diaryData.length / pageSize);
+    const maxPage = Math.ceil(currentData.length / pageSize);
     if(currentPage > maxPage) currentPage = maxPage;
     if(currentPage < 1) currentPage = 1;
 
     const start = (currentPage - 1) * pageSize;
-    const pageData = diaryData.slice(start, start + pageSize);
+    const pageData = currentData.slice(start, start + pageSize);
 
     let html = "";
     pageData.forEach(item => {
         html += `
-            <div class="card" style="margin-bottom:16px;">
+            <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <h3>${item.title}</h3>
                     <span>${item.mood}</span>
@@ -49,8 +51,8 @@ async function renderList() {
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
                     <span style="color:#666;">${item.date}</span>
                     <div>
-                        <button onclick="openEdit(${item.id})">编辑</button>
-                        <button onclick="delDiary(${item.id})">删除</button>
+                        <button onclick="openEdit(${item.id})" style="padding:6px 14px;margin-right:8px;">编辑</button>
+                        <button onclick="delDiary(${item.id})" style="padding:6px 14px;">删除</button>
                     </div>
                 </div>
             </div>
@@ -62,18 +64,38 @@ async function renderList() {
     nextBtn.disabled = currentPage >= maxPage;
 }
 
-// 删除函数：二次确认弹窗
+// ========== 搜索功能 ==========
+searchBtn.addEventListener("click", () => {
+    const kw = searchInput.value.trim();
+    currentData = searchDiary(kw);
+    currentPage = 1; // 搜索后重置到第1页
+    renderDiaryList();
+});
+
+// ========== 分页 ==========
+prevBtn.addEventListener("click", () => {
+    currentPage--;
+    renderDiaryList();
+});
+nextBtn.addEventListener("click", () => {
+    currentPage++;
+    renderDiaryList();
+});
+
+// ========== 删除功能 ==========
 window.delDiary = async function(id){
     if(window.confirm("确定要删除这条日记吗？删除后不可恢复！")){
         await deleteDiaryApi(id);
-        renderList();
+        // 删除后刷新当前数据
+        currentData = searchDiary(searchInput.value.trim());
+        renderDiaryList();
     }
 }
 
-// 打开编辑弹窗，回填数据
+// ========== 编辑功能 ==========
 window.openEdit = async function(id){
-    const res = await getDiaryListApi();
-    const diary = res.data.find(item=>item.id === id);
+    const allList = getAllDiary();
+    const diary = allList.find(item=>item.id === id);
     if(!diary) return;
     editId.value = diary.id;
     editTitle.value = diary.title;
@@ -82,18 +104,15 @@ window.openEdit = async function(id){
     editMask.classList.add("show");
 }
 
-//关闭弹窗
 cancelEdit.addEventListener("click",()=>{
     editMask.classList.remove("show");
 })
 
-//保存编辑，空内容校验
 saveEdit.addEventListener("click", async ()=>{
     const title = editTitle.value.trim();
     const mood = editMood.value.trim();
     const content = editContent.value.trim();
     const id = Number(editId.value);
-    //空内容校验
     if(!title || !mood || !content){
         alert("标题、情绪、内容不能为空！");
         return;
@@ -102,46 +121,13 @@ saveEdit.addEventListener("click", async ()=>{
     if(res.code === 0){
         alert("修改成功");
         editMask.classList.remove("show");
-        renderList();
+        // 修改后刷新当前数据
+        currentData = searchDiary(searchInput.value.trim());
+        renderDiaryList();
     }else{
         alert(res.msg);
     }
 })
 
-//分页事件
-prevBtn.addEventListener("click", () => {
-    currentPage--;
-    renderList();
-});
-nextBtn.addEventListener("click", () => {
-    currentPage++;
-    renderList();
-});
-
-renderList();
-
-// 搜索按钮点击
-document.getElementById("searchBtn").addEventListener("click",()=>{
-  const kw = document.getElementById("searchKeyword").value;
-  const result = searchDiary(kw);
-  renderDiaryList(result); // renderDiaryList是原有渲染列表函数，支持分页
-})
-
-// 导出
-document.getElementById("exportBtn").addEventListener("click", exportDiaryJson);
-
-// 导入文件选择监听
-document.getElementById("importFile").addEventListener("change", async (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  try{
-    const msg = await importDiaryJson(file);
-    alert(msg);
-    // 导入完成，刷新列表
-    renderDiaryList(getAllDiary());
-  }catch(err){
-    alert("导入失败："+err);
-  }
-  // 清空文件选择
-  e.target.value = "";
-})
+// 页面初始化
+renderDiaryList();
