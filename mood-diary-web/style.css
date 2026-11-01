@@ -588,8 +588,9 @@ body.light .card span {
     width: 200px;
     border-radius: 16px;
     padding: 10px;
-    background: rgba(15, 35, 60, 0.9);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    /* 固定灰色背景，不受主题影响 */
+    background: #738290 !important;
+    border: 1px solid #5a656a !important;
     backdrop-filter: blur(12px);
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
     opacity: 0;
@@ -628,6 +629,80 @@ body.light .card span {
     color: #38bdf8;
     font-weight: 500;
 }
+
+/* ========== 左侧情绪小知识卡片（放大版） ========== */
+.mood-tip-card {
+    position: fixed;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    min-height: 420px;
+    padding: 24px;
+    border-radius: 20px;
+    background: rgba(15, 35, 60, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+}
+
+.tip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    color: #38bdf8;
+    font-size: 19px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.tip-refresh {
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 9px;
+    transition: all 0.3s ease;
+}
+
+.tip-refresh:hover {
+    background: rgba(14, 165, 233, 0.15);
+    transform: rotate(180deg);
+}
+
+.tip-content {
+    color: #cbd5e1;
+    font-size: 16.5px;
+    line-height: 1.9;
+    max-height: 520px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    flex: 1;
+}
+
+.tip-content.collapse {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* 日间模式适配 */
+body.light .mood-tip-card {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(14, 165, 233, 0.22);
+    box-shadow: 0 10px 28px rgba(14, 165, 233, 0.18);
+}
+
+body.light .tip-content {
+    color: #334155;
+}
+
 
 
 
