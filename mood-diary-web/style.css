@@ -280,6 +280,13 @@ textarea {
     transform: translateY(-2px);
 }
 
+/* 夜间选中态 */
+.mood-card.active {
+    border-color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.15);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+}
+
 /* ========== 情绪卡片：日间模式 ========== */
 body.light .mood-card {
     background: #ffffff;
@@ -292,6 +299,39 @@ body.light .mood-card:hover {
     border-color: rgba(14, 165, 233, 0.45);
 }
 
+/* 日间选中态：浅蓝渐变，干净清爽 */
+body.light .mood-card.active {
+    border-color: #0ea5e9;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+}
+
+/* 日间模式：情绪日历格子颜色（高优先级，覆盖默认白底） */
+body.light .day-cell.mood-happy {
+    background: rgba(251, 191, 36, 0.25);
+    border-color: rgba(251, 191, 36, 0.6);
+    color: #d97706;
+}
+body.light .day-cell.mood-calm {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: rgba(34, 197, 94, 0.6);
+    color: #16a34a;
+}
+body.light .day-cell.mood-sad {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: rgba(59, 130, 246, 0.6);
+    color: #2563eb;
+}
+body.light .day-cell.mood-angry {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #dc2626;
+}
+body.light .day-cell.mood-excited {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: rgba(168, 85, 247, 0.6);
+    color: #9333ea;
+}
 
 .mood-card .emoji {
     font-size: 32px;
@@ -521,3 +561,73 @@ body.light .card p {
 body.light .card span {
     color: #64748b;
 }
+
+/* ========== 悬浮白噪音播放器 ========== */
+.music-player {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 999;
+}
+
+.music-toggle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-list {
+    position: absolute;
+    right: 0;
+    bottom: 64px;
+    width: 200px;
+    border-radius: 16px;
+    padding: 10px;
+    background: rgba(15, 35, 60, 0.9);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.25s ease;
+}
+
+.music-list.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.music-item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.music-item:last-child {
+    margin-bottom: 0;
+}
+
+.music-item:hover {
+    background: rgba(14, 165, 233, 0.15);
+    color: #fff;
+}
+
+.music-item.playing {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(6, 182, 212, 0.25));
+    color: #38bdf8;
+    font-weight: 500;
+}
+
+
+

@@ -194,3 +194,49 @@ function importDiaryJson(file) {
         if (btn) btn.addEventListener("click", toggleTheme);
     });
 })();
+
+// ========== 悬浮白噪音播放器 ==========
+(function initMusicPlayer() {
+    const toggleBtn = document.getElementById('musicToggle');
+    const listBox = document.getElementById('musicList');
+    const audio = document.getElementById('bgAudio');
+    if (!toggleBtn || !listBox || !audio) return;
+
+    audio.volume = 0.4; // 默认音量 40%
+
+    // 展开/收起列表
+    toggleBtn.addEventListener('click', () => {
+        listBox.classList.toggle('show');
+    });
+
+    // 点击曲目播放/切换
+    document.querySelectorAll('.music-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const src = item.dataset.src;
+
+            // 如果点击的是当前正在播放的 → 暂停
+            if (item.classList.contains('playing')) {
+                audio.pause();
+                item.classList.remove('playing');
+                return;
+            }
+
+            // 切换播放
+            document.querySelectorAll('.music-item').forEach(i => i.classList.remove('playing'));
+            item.classList.add('playing');
+            audio.src = src;
+            audio.play().catch(() => {
+                // 浏览器阻止自动播放时的静默处理
+            });
+        });
+    });
+
+    // 点击页面其他地方收起列表
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.music-player')) {
+            listBox.classList.remove('show');
+        }
+    });
+})();
+
+
