@@ -2,56 +2,288 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>情绪月度统计</title>
+    <title>情绪统计</title>
     <link rel="stylesheet" href="style.css">
-    <!--引入Chart.js图表库 CDN-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Tab 切换栏 */
+        .tab-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: rgba(15, 35, 60, 0.6);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            box-shadow: none;
+            font-size: 15px;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+        }
+        .tab-btn:hover:not(.active) {
+            color: #e2e8f0;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* 日历样式 */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .calendar-header button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 18px;
+        }
+        .calendar-title {
+            text-align: center;
+        }
+        .calendar-title h3 {
+            margin-bottom: 2px;
+            font-size: 18px;
+        }
+        .calendar-title p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .week-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .week-day {
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+            padding: 6px 0;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .day-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            background: rgba(15, 35, 60, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .day-cell:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            transform: translateY(-2px);
+        }
+        .day-cell.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+        .day-cell.empty:hover {
+            transform: none;
+        }
+
+        /* 情绪颜色 */
+        .mood-happy { background: rgba(251, 191, 36, 0.25); border-color: rgba(251, 191, 36, 0.5); color: #fbbf24; }
+        .mood-calm { background: rgba(34, 197, 94, 0.25); border-color: rgba(34, 197, 94, 0.5); color: #22c55e; }
+        .mood-sad { background: rgba(59, 130, 246, 0.25); border-color: rgba(59, 130, 246, 0.5); color: #3b82f6; }
+        .mood-angry { background: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.5); color: #ef4444; }
+        .mood-excited { background: rgba(168, 85, 247, 0.25); border-color: rgba(168, 85, 247, 0.5); color: #a855f7; }
+
+        .legend {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* 日间模式适配 */
+        body.light .tab-bar {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(14, 165, 233, 0.2);
+        }
+        body.light .tab-btn {
+            color: #64748b;
+        }
+        body.light .tab-btn:hover:not(.active) {
+            color: #0ea5e9;
+        }
+        body.light .day-cell {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(14, 165, 233, 0.15);
+            color: #475569;
+        }
+        body.light .day-cell.empty {
+            background: transparent;
+            border: none;
+        }
+        body.light .calendar-title p,
+        body.light .week-day,
+        body.light .legend-item {
+            color: #64748b;
+        }
+    </style>
 </head>
 <body>
+    <button class="theme-toggle" id="themeBtn" title="切换日间/夜间模式">🌙</button>
+
     <div class="container">
-        <h1>📊 指定月份情绪统计图表</h1>
-        <!--月份选择器组件-->
-        <div style="margin:20px 0;text-align:center;">
+        <h1>情绪月度统计</h1>
+
+        <div class="nav-row">
+            <a href="index.html"><button>新建日记</button></a>
+            <a href="list.html"><button>查看日记列表</button></a>
+        </div>
+
+        <div class="stats-wrap">
             <label>选择月份：</label>
             <input type="month" id="monthSelect">
             <button id="queryBtn">查询统计</button>
-            <div style="margin-top:12px;">
-                <a href="index.html"><button>新建日记</button></a>
-                <a href="list.html"><button>查看日记列表</button></a>
+        </div>
+
+        <!-- Tab 切换 -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="chart">统计图表</button>
+            <button class="tab-btn" data-tab="calendar">情绪日历</button>
+        </div>
+
+        <div class="chart-box">
+            <!-- 面板1：饼图 -->
+            <div class="tab-panel active" id="panelChart">
+                <canvas id="moodChart"></canvas>
+                <div id="emptyTip">当前月份暂无日记数据</div>
+            </div>
+
+            <!-- 面板2：情绪日历 -->
+            <div class="tab-panel" id="panelCalendar">
+                <div class="calendar-header">
+                    <button id="prevMonth">‹</button>
+                    <div class="calendar-title">
+                        <h3 id="monthTitle">2026年11月</h3>
+                        <p id="monthStats">共 0 条日记</p>
+                    </div>
+                    <button id="nextMonth">›</button>
+                </div>
+
+                <div class="week-row">
+                    <div class="week-day">日</div>
+                    <div class="week-day">一</div>
+                    <div class="week-day">二</div>
+                    <div class="week-day">三</div>
+                    <div class="week-day">四</div>
+                    <div class="week-day">五</div>
+                    <div class="week-day">六</div>
+                </div>
+
+                <div class="days-grid" id="daysGrid"></div>
+
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#fbbf24;"></span>开心</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span>平静</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>低落</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span>烦躁</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#a855f7;"></span>兴奋</div>
+                </div>
             </div>
         </div>
-        <!--图表容器-->
-        <div style="width:500px;height:400px;margin:0 auto;">
-            <canvas id="moodChart"></canvas>
-        </div>
-        <!--空状态提示-->
-        <div id="emptyTip" style="text-align:center;color:#777;font-size:16px;margin-top:30px;display:none;">
-            当前月份暂无日记数据
-        </div>
     </div>
+
 <script src="api.js"></script>
 <script>
 const monthSelect = document.getElementById("monthSelect");
 const queryBtn = document.getElementById("queryBtn");
 const emptyTip = document.getElementById("emptyTip");
 const canvasDom = document.getElementById("moodChart");
+const daysGrid = document.getElementById('daysGrid');
+const monthTitle = document.getElementById('monthTitle');
+const monthStats = document.getElementById('monthStats');
+const prevMonthBtn = document.getElementById('prevMonth');
+const nextMonthBtn = document.getElementById('nextMonth');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
 
-//默认选中当前年月
+// 默认选中当前年月
 const now = new Date();
-const defaultYM = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+let currentYear = now.getFullYear();
+let currentMonth = now.getMonth(); // 0-11
+const defaultYM = `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}`;
 monthSelect.value = defaultYM;
 
 let chartIns = null;
 
-//渲染图表
+// 情绪映射
+const moodMap = {
+    '😊 开心': 'mood-happy',
+    '😌 平静': 'mood-calm',
+    '😔 低落': 'mood-sad',
+    '😠 烦躁': 'mood-angry',
+    '🤩 兴奋': 'mood-excited'
+};
+
+// ========== Tab 切换 ==========
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    });
+});
+
+// ========== 绘制饼图 ==========
 async function drawChart(){
     const ym = monthSelect.value;
     const res = await getMonthStatsApi(ym);
     const data = res.data.list;
     const total = res.data.total;
 
-    //空数据处理
-    if(total ===0){
+    if(total === 0){
         emptyTip.style.display = "block";
         if(chartIns){
             chartIns.destroy();
@@ -61,37 +293,124 @@ async function drawChart(){
     }
     emptyTip.style.display = "none";
 
-    //销毁旧图表，防止叠加
     if(chartIns){
         chartIns.destroy();
     }
     const labels = data.map(item=>item.name);
     const values = data.map(item=>item.value);
+    const textColor = document.body.classList.contains("light") ? '#1e293b' : '#e2e8f0';
 
     chartIns = new Chart(canvasDom,{
-        type:"pie", //饼图，可以改成bar柱状图
+        type:"pie",
         data:{
             labels:labels,
             datasets:[{
                 data:values,
-                backgroundColor:["#ff7875","#ffc53d","#5cdbd3","#85a5ff","#b37feb"]
+                backgroundColor:["#fbbf24","#22c55e","#3b82f6","#ef4444","#a855f7"]
             }]
         },
         options:{
             responsive:true,
             plugins:{
+                legend:{
+                    labels:{ color: textColor }
+                },
                 title:{
                     display:true,
-                    text:`${ym} 情绪分布统计，总日记：${total}条`
+                    text:`${ym} 情绪分布统计，总日记：${total}条`,
+                    color: textColor,
+                    font:{ size: 16 }
                 }
             }
         }
     })
 }
 
-queryBtn.addEventListener("click",drawChart);
-//页面加载自动查询
+// ========== 渲染日历 ==========
+function renderCalendar() {
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    
+    monthTitle.textContent = `${currentYear}年${currentMonth + 1}月`;
+    
+    // 同步月份选择器
+    monthSelect.value = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    
+    // 获取当月日记
+    const allDiary = getAllDiary();
+    const monthPrefix = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    const monthDiary = allDiary.filter(item => item.date.startsWith(monthPrefix));
+    
+    // 按日期分组
+    const dayMap = {};
+    monthDiary.forEach(item => {
+        const day = item.date.split('-')[2];
+        dayMap[day] = item;
+    });
+
+    monthStats.textContent = `共 ${monthDiary.length} 条日记`;
+    daysGrid.innerHTML = '';
+
+    // 前面空白格
+    for (let i = 0; i < firstDay; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'day-cell empty';
+        daysGrid.appendChild(cell);
+    }
+
+    // 日期格子
+    for (let d = 1; d <= daysInMonth; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        cell.textContent = d;
+        
+        const dayStr = String(d).padStart(2, '0');
+        const diary = dayMap[dayStr];
+        if (diary) {
+            const moodClass = moodMap[diary.mood] || '';
+            if (moodClass) cell.classList.add(moodClass);
+            cell.title = `${diary.title} · ${diary.mood}`;
+        }
+        daysGrid.appendChild(cell);
+    }
+}
+
+// ========== 月份切换联动 ==========
+prevMonthBtn.addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+    drawChart();
+});
+
+nextMonthBtn.addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    renderCalendar();
+    drawChart();
+});
+
+// 顶部月份选择器变化时，同步日历并重绘
+queryBtn.addEventListener("click", () => {
+    const [y, m] = monthSelect.value.split('-');
+    currentYear = parseInt(y);
+    currentMonth = parseInt(m) - 1;
+    drawChart();
+    renderCalendar();
+});
+
+// 初始化
 drawChart();
+renderCalendar();
+
+// 监听主题切换，自动重绘图表文字颜色
+const observer = new MutationObserver(() => {
+    if (chartIns) {
+        drawChart();
+    }
+});
+observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
 </script>
 </body>
 </html>

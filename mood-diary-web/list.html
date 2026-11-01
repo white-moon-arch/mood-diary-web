@@ -4,58 +4,46 @@
     <meta charset="UTF-8">
     <title>情绪日记 - 历史记录</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /*编辑弹窗样式*/
-        .mask{
-            position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);
-            display:none;align-items:center;justify-content:center;
-        }
-        .edit-card{
-            background:#fff;padding:24px;border-radius:16px;width:450px;
-        }
-        .mask.show{display:flex;}
-    </style>
 </head>
 <body>
+
+    <!-- 主题切换按钮 -->
+    <button class="theme-toggle" id="themeBtn" title="切换日间/夜间模式">🌙</button>
+
+
     <div class="container">
-        <h1>📖 历史情绪日记</h1>
+        <h1>历史情绪日记</h1>
 
-        <!-- 在列表页头部新增区域 -->
-        <div class="search-bar" style="display:flex; gap:12px; margin-bottom:20px; align-items:center; width:100%;">
-    <input 
-        type="text" 
-        id="searchKeyword" 
-        placeholder="输入关键词搜索日记..."
-        style="padding:12px 16px; flex: 1; font-size:16px; border: 1px solid #dcdcdc; border-radius:8px; box-sizing:border-box; min-width:200px;"
-    >
-    <button id="searchBtn" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#7b68ee; color:white; cursor:pointer; white-space:nowrap;">搜索</button>
-    <button id="exportBtn" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#7b68ee; color:white; cursor:pointer; white-space:nowrap;">导出全部日记(JSON)</button>
-    <label for="importFile" style="padding:12px 24px; font-size:16px; border:none; border-radius:8px; background:#409eff; color:white; cursor:pointer; white-space:nowrap;">
-        导入备份JSON
-        <input type="file" id="importFile" accept=".json" hidden>
-    </label>
-</div>
+        <!-- 搜索 + 导入导出 -->
+        <div class="search-bar">
+            <input type="text" id="searchKeyword" placeholder="输入关键词搜索日记...">
+            <button id="searchBtn">搜索</button>
+            <button id="exportBtn">导出全部日记(JSON)</button>
+            <button id="importBtn">导入备份JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;">
 
-
-        <!-- 原有日记列表+分页代码保留 -->
-
-
-        <div style="text-align:center;margin-bottom:20px;">
-            <a href="index.html"><button style="width:auto;padding:8px 16px;">新建日记</button></a>
         </div>
+
+        <div class="nav-row">
+            <a href="index.html"><button>新建日记</button></a>
+        </div>
+
+        <!-- 日记列表容器 -->
         <div id="diaryList"></div>
 
-        <a href="stats.html"><button>📊 情绪统计图表</button></a>
+        <div class="nav-row">
+            <a href="stats.html"><button>情绪统计图表</button></a>
+        </div>
 
-
-        <div id="pageBox" style="text-align:center;margin-top:24px;">
-            <button id="prevBtn" style="width:auto;display:inline-block;margin:0 5px;">上一页</button>
+        <!-- 分页区域 -->
+        <div id="pageBox">
+            <button id="prevBtn">上一页</button>
             <span id="pageInfo">第1页</span>
-            <button id="nextBtn" style="width:auto;display:inline-block;margin:0 5px;">下一页</button>
+            <button id="nextBtn">下一页</button>
         </div>
     </div>
 
-    <!--编辑弹窗-->
+    <!-- 编辑弹窗 -->
     <div class="mask" id="editMask">
         <div class="edit-card">
             <h3>编辑日记</h3>
@@ -72,7 +60,7 @@
                 <textarea id="editContent" rows="5"></textarea>
             </div>
             <input type="hidden" id="editId">
-            <div style="margin-top:16px;text-align:right;">
+            <div class="nav-row" style="text-align:right;">
                 <button id="cancelEdit">取消</button>
                 <button id="saveEdit">保存修改</button>
             </div>

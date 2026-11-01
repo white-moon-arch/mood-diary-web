@@ -1,32 +1,42 @@
 // api.js 模拟后端接口
 // 接口1：保存日记接口 POST /api/diary/save
-async function saveDiaryApi(diaryInfo) {
-    //模拟网络延迟，模拟真实接口请求
-    await new Promise(resolve => setTimeout(resolve, 300));
+// 保存日记（限制每天只能写一篇）
+async function saveDiaryApi(diary) {
+  return new Promise((resolve) => {
+    const list = getAllDiary();
 
-    //读取本地存储的日记数组
-    let diaryList = JSON.parse(localStorage.getItem("moodDiaryList")) || [];
+    // 生成当天日期，格式和存储保持一致 YYYY-MM-DD
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
-    //组装日记数据，自动生成id和当前日期
-    const newDiary = {
-        id: Date.now(),
-        title: diaryInfo.title,
-        mood: diaryInfo.mood,
-        content: diaryInfo.content,
-        date: new Date().toISOString().split('T')[0]
-    };
-    diaryList.unshift(newDiary); //新日记放最前面
-
-    //存入localStorage
-    localStorage.setItem("moodDiaryList", JSON.stringify(diaryList));
-
-    //模拟后端返回json格式
-    return {
-        code: 0,
-        msg: "保存成功",
-        data: newDiary
+    // 校验：当天是否已有日记
+    const exist = list.some(item => item.date === today);
+    if (exist) {
+      resolve({
+        code: 1,
+        msg: "今天已经写过日记啦，每天记录一篇就够啦~"
+      });
+      return;
     }
+
+    // 正常保存
+    const newDiary = {
+      id: Date.now(),
+      title: diary.title,
+      mood: diary.mood,
+      content: diary.content,
+      date: today
+    };
+    list.unshift(newDiary);
+    localStorage.setItem("moodDiaryList", JSON.stringify(list));
+    resolve({
+      code: 0,
+      msg: "保存成功",
+      data: newDiary
+    });
+  });
 }
+
 
 //接口2：查询日记接口 GET /api/diary/getList
 async function getDiaryListApi() {
@@ -157,3 +167,30 @@ function importDiaryJson(file) {
   })
 }
 
+// ========== 日间/夜间主题切换 ==========
+(function initTheme() {
+    const saved = localStorage.getItem("moodDiaryTheme");
+    if (saved === "light") {
+        document.body.classList.add("light");
+    }
+    updateBtnIcon();
+
+    function toggleTheme() {
+        document.body.classList.toggle("light");
+        const isLight = document.body.classList.contains("light");
+        localStorage.setItem("moodDiaryTheme", isLight ? "light" : "dark");
+        updateBtnIcon();
+    }
+
+    function updateBtnIcon() {
+        const btn = document.getElementById("themeBtn");
+        if (!btn) return;
+        const isLight = document.body.classList.contains("light");
+        btn.textContent = isLight ? "☀️" : "🌙";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("themeBtn");
+        if (btn) btn.addEventListener("click", toggleTheme);
+    });
+})();

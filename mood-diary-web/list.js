@@ -14,7 +14,7 @@ const cancelEdit = document.getElementById("cancelEdit");
 const saveEdit = document.getElementById("saveEdit");
 
 let currentPage = 1;
-const pageSize = 2;
+const pageSize = 10;
 // 当前展示的数据：搜索结果 / 全部数据
 let currentData = getAllDiary();
 
@@ -131,3 +131,46 @@ saveEdit.addEventListener("click", async ()=>{
 
 // 页面初始化
 renderDiaryList();
+
+// ========== 导出 ==========
+document.getElementById("exportBtn").addEventListener("click", exportDiaryJson);
+
+// ========== 导入 ==========
+const importBtn = document.getElementById("importBtn");
+const importFileInput = document.getElementById("importFile");
+
+// 点击按钮触发文件选择框
+importBtn.addEventListener("click", () => {
+    importFileInput.click();
+});
+
+// 选择文件后执行导入
+importFileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        try {
+            const data = JSON.parse(event.target.result);
+            if (!Array.isArray(data)) {
+                alert("文件格式错误，请选择正确的日记备份文件");
+                return;
+            }
+            if (!confirm("导入将覆盖当前所有日记数据，确定继续吗？")) {
+                return;
+            }
+            localStorage.setItem("moodDiaryList", JSON.stringify(data));
+            alert("导入成功！");
+            // 刷新列表
+            currentData = getAllDiary();
+            currentPage = 1;
+            renderDiaryList();
+        } catch (err) {
+            alert("文件解析失败，请检查文件是否损坏");
+        }
+        // 重置input，允许重复导入同一个文件
+        importFileInput.value = "";
+    };
+    reader.readAsText(file);
+});
