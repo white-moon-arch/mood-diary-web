@@ -333,6 +333,31 @@ body.light .day-cell.mood-excited {
     color: #9333ea;
 }
 
+/* 日历日期格子：增加相对定位，用于承载悬浮提示 */
+.day-cell {
+    position: relative;
+}
+
+/* 日历日期悬浮提示：灰色背景 */
+.day-cell:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: #6b7280;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+
+
+
 .mood-card .emoji {
     font-size: 32px;
     display: block;
@@ -703,6 +728,154 @@ body.light .tip-content {
     color: #334155;
 }
 
+/* ========== 日记详情页 ========== */
+.detail-container {
+    max-width: 760px;
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.detail-card {
+    border-radius: 20px;
+    padding: 32px;
+    background: rgba(15, 35, 60, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background: rgba(14, 165, 233, 0.15);
+}
+
+.detail-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-secondary, .btn-danger {
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary {
+    background: rgba(14, 165, 233, 0.15);
+    color: #38bdf8;
+}
+
+.btn-secondary:hover {
+    background: rgba(14, 165, 233, 0.25);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+.detail-title {
+    font-size: 28px;
+    color: #f1f5f9;
+    margin: 0 0 16px 0;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.meta-mood {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+.meta-weather {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+.detail-supplement {
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(14, 165, 233, 0.08);
+    margin-bottom: 24px;
+    color: #cbd5e1;
+    font-size: 15px;
+    border-left: 3px solid #0ea5e9;
+}
+
+.supplement-label {
+    color: #38bdf8;
+    font-weight: 500;
+}
+
+.detail-content {
+    color: #e2e8f0;
+    font-size: 16px;
+    line-height: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* 日间模式适配 */
+body.light .detail-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(14, 165, 233, 0.2);
+    box-shadow: 0 12px 40px rgba(14, 165, 233, 0.15);
+}
+
+body.light .detail-title {
+    color: #0f172a;
+}
+
+body.light .detail-content {
+    color: #334155;
+}
+
+body.light .detail-meta {
+    color: #64748b;
+}
+
+body.light .detail-supplement {
+    color: #475569;
+}
 
 
 

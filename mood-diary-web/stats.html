@@ -392,16 +392,23 @@ function renderCalendar() {
         const cell = document.createElement('div');
         cell.className = 'day-cell';
         cell.textContent = d;
-        
+
         const dayStr = String(d).padStart(2, '0');
         const diary = dayMap[dayStr];
         if (diary) {
             const moodClass = moodMap[diary.mood] || '';
             if (moodClass) cell.classList.add(moodClass);
             cell.title = `${diary.title} · ${diary.mood}`;
+
+            // 新增：有日记的日期可点击，跳转到详情页
+            cell.style.cursor = 'pointer';
+            cell.onclick = function () {
+                window.location.href = 'detail.html?id=' + diary.id;
+            };
         }
         daysGrid.appendChild(cell);
     }
+
 }
 
 // ========== 月份切换联动 ==========
