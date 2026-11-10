@@ -489,7 +489,7 @@ body.light .end-screen h2 {
 
 .chat-bubble {
     padding: 36px 40px;
-    font-size: 24px;
+    font-size: 30px;
     line-height: 1.8;
     border-radius: 28px;
     min-height: 120px;
@@ -653,7 +653,7 @@ body.light .card span {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     color: #38bdf8;
     font-size: 19px;
     font-weight: 500;
@@ -664,7 +664,7 @@ body.light .card span {
     background: transparent;
     border: none;
     color: #38bdf8;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     padding: 7px;
     border-radius: 9px;
@@ -678,7 +678,7 @@ body.light .card span {
 
 .tip-content {
     color: #cbd5e1;
-    font-size: 16.5px;
+    font-size: 18px;
     line-height: 1.9;
     max-height: 520px;
     overflow: hidden;
