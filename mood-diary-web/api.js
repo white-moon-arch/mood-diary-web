@@ -41,7 +41,9 @@ async function saveDiaryApi(diary) {
 //接口2：查询日记接口 GET /api/diary/getList
 async function getDiaryListApi() {
     await new Promise(resolve => setTimeout(resolve,300));
-    const diaryList = JSON.parse(localStorage.getItem("moodDiaryList")) || [];
+    const diaryList = getDiaryListApi();
+    const diary = diaryList.find(item => item.id == diaryId);
+
     return {
         code:0,
         msg:"查询成功",

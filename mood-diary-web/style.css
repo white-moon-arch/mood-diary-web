@@ -333,6 +333,31 @@ body.light .day-cell.mood-excited {
     color: #9333ea;
 }
 
+/* 日历日期格子：增加相对定位，用于承载悬浮提示 */
+.day-cell {
+    position: relative;
+}
+
+/* 日历日期悬浮提示：灰色背景 */
+.day-cell:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: #6b7280;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+
+
+
 .mood-card .emoji {
     font-size: 32px;
     display: block;
@@ -702,7 +727,4 @@ body.light .mood-tip-card {
 body.light .tip-content {
     color: #334155;
 }
-
-
-
 
