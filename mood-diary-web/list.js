@@ -40,25 +40,24 @@ function renderDiaryList() {
     const pageData = currentData.slice(start, start + pageSize);
 
     let html = "";
-   pageData.forEach(item => {
-    html += `
-        <div class="card" style="cursor:pointer;" onclick="window.location.href='detail.html?id=${item.id}'">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3>${item.title}</h3>
-                <span>${item.mood}</span>
-            </div>
-            <p>${item.content.length > 60 ? item.content.substring(0, 60) + '...' : item.content}</p>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
-                <span style="color:#666;">${item.date}</span>
-                <div>
-                    <button onclick="event.stopPropagation(); openEdit(${item.id})" style="padding:6px 14px;margin-right:8px;">编辑</button>
-                    <button onclick="event.stopPropagation(); delDiary(${item.id})" style="padding:6px 14px;">删除</button>
+    pageData.forEach(item => {
+        html += `
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3>${item.title}</h3>
+                    <span>${item.mood}</span>
+                </div>
+                <p>${item.content}</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+                    <span style="color:#666;">${item.date}</span>
+                    <div>
+                        <button onclick="openEdit(${item.id})" style="padding:6px 14px;margin-right:8px;">编辑</button>
+                        <button onclick="delDiary(${item.id})" style="padding:6px 14px;">删除</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
-});
-
+        `;
+    });
     diaryListDom.innerHTML = html;
     pageInfoDom.innerText = `第${currentPage}页 / 共${maxPage}页`;
     prevBtn.disabled = currentPage <= 1;
