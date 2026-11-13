@@ -94,17 +94,19 @@
                     <label>日记标题</label>
                     <input type="text" id="titleInput" placeholder="给今天起个小标题...">
                 </div>
-                <!-- 天气选择 -->
-                <div class="weather-select">
+             
+               <!-- 天气选择 -->
+                <!-- <div class="weather-select">
                     <label>今天的天气是？</label>
                     <div class="weather-options">
-                        <button type="button" class="weather-btn" data-weather="晴">☀️ 晴</button>
-                        <button type="button" class="weather-btn" data-weather="多云">⛅ 多云</button>
-                        <button type="button" class="weather-btn" data-weather="阴">☁️ 阴</button>
-                        <button type="button" class="weather-btn" data-weather="小雨">🌧️ 小雨</button>
-                        <button type="button" class="weather-btn" data-weather="雪">❄️ 雪</button>
+                        <button type="button" class="weather-btn" onclick="selectWeather('晴', this)">☀️ 晴</button>
+                        <button type="button" class="weather-btn" onclick="selectWeather('多云', this)">⛅ 多云</button>
+                        <button type="button" class="weather-btn" onclick="selectWeather('阴', this)">☁️ 阴</button>
+                        <button type="button" class="weather-btn" onclick="selectWeather('小雨', this)">🌧️ 小雨</button>
+                        <button type="button" class="weather-btn" onclick="selectWeather('雪', this)">❄️ 雪</button>
                     </div>
-                </div>
+                </div> -->
+
 
                 <div class="item">
                     <label>日记内容</label>
@@ -113,7 +115,7 @@
             </div>
             <div style="display:flex; gap:16px;">
                 <button class="action-btn" onclick="goBack()" style="flex:1;">返回上一步</button>
-                <button class="action-btn" onclick="saveDiary()" style="flex:1;">保存日记</button>
+                <button class="action-btn" onclick="saveDiary()"  style="flex:1;">保存日记</button>
             </div>
 
         </div>
@@ -164,9 +166,18 @@
         </div>
     </div>
 
+    <!-- Toast 提示容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
 
 <script src="api.js"></script>
 <script>
+    if (!localStorage.getItem("isLogin")) {
+        window.location.href = "sign.html";
+    }
+
+
+
     let selectedMood = '';
     let supplementMood = ''; // 新增：补充情绪
 
@@ -214,6 +225,9 @@
         }, 400);
     }
 
+    
+
+
    function saveDiary() {
     const title = document.getElementById('titleInput').value.trim();
     const content = document.getElementById('contentInput').value.trim();
@@ -221,7 +235,7 @@
     supplementMood = document.getElementById('supplementMood').value.trim();
 
     if (!title || !content) {
-        alert('标题和内容都要写一点哦~');
+        showToast('标题和内容都要写一点哦~');
         return;
     }
 
@@ -233,8 +247,9 @@
     }).then(res => {
         if (res.code === 0) {
             // 原有保存成功逻辑
+            showToast(res.msg);
         } else {
-            alert(res.msg);
+            showToast(res.msg);
         }
     });
 }

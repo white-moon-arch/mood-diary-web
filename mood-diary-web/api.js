@@ -335,3 +335,61 @@ function importDiaryJson(file) {
     tipContent.addEventListener('click', switchTip);
 })();
 
+// ========== 通用确认弹窗 ==========
+function showConfirm(message, onConfirm) {
+    const modal = document.getElementById('confirmModal');
+    if (!modal) return;
+
+    const cancelBtn = document.getElementById('confirmCancel');
+    const okBtn = document.getElementById('confirmOk');
+    const contentEl = modal.querySelector('.confirm-content');
+
+    // 设置提示文案
+    contentEl.textContent = message;
+    // 显示弹窗
+    modal.classList.add('show');
+
+    // 确认操作
+    function handleConfirm() {
+        onConfirm();
+        closeModal();
+    }
+
+    // 关闭弹窗并解绑事件
+    function closeModal() {
+        modal.classList.remove('show');
+        okBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', closeModal);
+    }
+
+    okBtn.addEventListener('click', handleConfirm);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // 点击遮罩层也能关闭
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+}
+
+// ========== 通用 Toast 提示 ==========
+function showToast(message, type = 'default', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    // 创建单条提示元素
+    const toast = document.createElement('div');
+    toast.className = `toast-item ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    // 触发入场动画
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // 定时消失并移除
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}

@@ -13,6 +13,8 @@ const editId = document.getElementById("editId");
 const cancelEdit = document.getElementById("cancelEdit");
 const saveEdit = document.getElementById("saveEdit");
 
+
+
 let currentPage = 1;
 const pageSize = 10;
 // 当前展示的数据：搜索结果 / 全部数据
@@ -84,13 +86,14 @@ nextBtn.addEventListener("click", () => {
 
 // ========== 删除功能 ==========
 window.delDiary = async function(id){
-    if(window.confirm("确定要删除这条日记吗？删除后不可恢复！")){
+    showConfirm("确定要删除这条日记吗？删除后不可恢复！", async () => {
         await deleteDiaryApi(id);
         // 删除后刷新当前数据
         currentData = searchDiary(searchInput.value.trim());
         renderDiaryList();
-    }
+    });
 }
+
 
 // ========== 编辑功能 ==========
 window.openEdit = async function(id){
@@ -114,18 +117,18 @@ saveEdit.addEventListener("click", async ()=>{
     const content = editContent.value.trim();
     const id = Number(editId.value);
     if(!title || !mood || !content){
-        alert("标题、情绪、内容不能为空！");
+        showToast("标题、情绪、内容不能为空！");
         return;
     }
     const res = await updateDiaryApi({id,title,mood,content});
     if(res.code === 0){
-        alert("修改成功");
+        showToast("修改成功");
         editMask.classList.remove("show");
         // 修改后刷新当前数据
         currentData = searchDiary(searchInput.value.trim());
         renderDiaryList();
     }else{
-        alert(res.msg);
+        showToast(res.msg);
     }
 })
 
@@ -154,20 +157,20 @@ importFileInput.addEventListener("change", (e) => {
         try {
             const data = JSON.parse(event.target.result);
             if (!Array.isArray(data)) {
-                alert("文件格式错误，请选择正确的日记备份文件");
+                showToast("文件格式错误，请选择正确的日记备份文件");
                 return;
             }
             if (!confirm("导入将覆盖当前所有日记数据，确定继续吗？")) {
                 return;
             }
             localStorage.setItem("moodDiaryList", JSON.stringify(data));
-            alert("导入成功！");
+            showToast("导入成功！");
             // 刷新列表
             currentData = getAllDiary();
             currentPage = 1;
             renderDiaryList();
         } catch (err) {
-            alert("文件解析失败，请检查文件是否损坏");
+            showToast("文件解析失败，请检查文件是否损坏");
         }
         // 重置input，允许重复导入同一个文件
         importFileInput.value = "";

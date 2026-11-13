@@ -97,7 +97,20 @@
     </div>
     <audio id="bgAudio" loop></audio>
 
+        <!-- 删除确认弹窗 -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-box">
+            <div class="confirm-title">温馨提示</div>
+            <div class="confirm-content">确定要删除这条日记吗？删除后无法恢复。</div>
+            <div class="confirm-btns">
+                <button class="btn btn-cancel" id="confirmCancel">取消</button>
+                <button class="btn btn-confirm" id="confirmOk">确认删除</button>
+            </div>
+        </div>
+    </div>
 
+        <!-- Toast 提示容器 -->
+    <div class="toast-container" id="toastContainer"></div>
 
 
 <script src="api.js"></script>
