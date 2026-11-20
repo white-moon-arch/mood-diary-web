@@ -1,0 +1,885 @@
+/* ========== 全局基础：深色玻璃拟态风格 ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "PingFang SC", "Microsoft Yahei", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #0a1628;
+    color: #e2e8f0;
+    padding: 40px 20px;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* ========== 页面容器 ========== */
+.container {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.container h1 {
+    color: #f1f5f9;
+    text-align: center;
+    margin-bottom: 36px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 32px;
+}
+
+h2 { font-size: 24px; color: #f1f5f9; }
+h3 { font-size: 20px; color: #f1f5f9; font-weight: 600; }
+
+/* ========== 卡片通用：深色玻璃态 ========== */
+.card {
+    background: rgba(15, 35, 60, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 20px;
+    padding: 28px 30px;
+    color: #cbd5e1;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
+    transition: all 0.25s ease;
+}
+
+.card:hover {
+    border-color: rgba(56, 189, 248, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.item {
+    margin-bottom: 22px;
+}
+
+.item label {
+    display: block;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+/* ========== 按钮通用：青蓝主色 ========== */
+button {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.25);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #38bdf8, #22d3ee);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(14, 165, 233, 0.35);
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ========== 表单输入：深色风格 ========== */
+input[type="text"],
+input[type="month"],
+textarea,
+select {
+    width: 100%;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 16px;
+    background: rgba(15, 23, 42, 0.6);
+    color: #e2e8f0;
+    transition: all 0.25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+    background: rgba(15, 23, 42, 0.85);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #64748b;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+/* ========== 搜索栏 ========== */
+.search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-bar input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* ========== 分页 ========== */
+#pageBox {
+    text-align: center;
+    margin-top: 32px;
+    color: #94a3b8;
+}
+
+#pageBox button {
+    width: auto;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#pageInfo {
+    margin: 0 14px;
+    font-size: 15px;
+}
+
+/* ========== 编辑弹窗 ========== */
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    z-index: 999;
+}
+
+.mask.show {
+    display: flex;
+}
+
+.edit-card {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 36px;
+    border-radius: 24px;
+    width: 540px;
+    color: #e2e8f0;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.edit-card h3 {
+    margin-bottom: 22px;
+    color: #38bdf8;
+}
+
+/* ========== 统计页专属 ========== */
+.stats-wrap {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.stats-wrap select,
+.stats-wrap input {
+    width: auto;
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.chart-box {
+    background: rgba(15, 35, 60, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    color: #e2e8f0;
+    backdrop-filter: blur(10px);
+}
+
+#emptyTip {
+    text-align: center;
+    color: #64748b;
+    margin-top: 40px;
+    font-size: 16px;
+}
+
+/* ========== 空状态 ========== */
+.empty-tip {
+    text-align: center;
+    color: #64748b;
+    padding: 40px 20px;
+}
+
+/* ========== 链接按钮组 ========== */
+.nav-row {
+    text-align: center;
+    margin: 24px 0;
+}
+
+.nav-row a {
+    text-decoration: none;
+}
+
+.nav-row button {
+    margin: 0 8px;
+}
+
+/* ========== 沉浸式新增页适配深色风格 ========== */
+.chat-bubble {
+    background: rgba(15, 35, 60, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 28px 34px;
+    border-radius: 22px;
+    backdrop-filter: blur(10px);
+    font-size: 18px;
+    line-height: 1.7;
+    color: #e2e8f0;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+}
+
+.mood-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+}
+
+/* ========== 情绪卡片：夜间模式（默认） ========== */
+.mood-card {
+    background: rgba(15, 35, 60, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    border-radius: 18px;
+    padding: 18px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: #cbd5e1;
+}
+
+.mood-card:hover {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 夜间选中态 */
+.mood-card.active {
+    border-color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.15);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+}
+
+/* ========== 情绪卡片：日间模式 ========== */
+body.light .mood-card {
+    background: #ffffff;
+    border-color: rgba(14, 165, 233, 0.25);
+    color: #475569;
+}
+
+body.light .mood-card:hover {
+    background: #f0f9ff;
+    border-color: rgba(14, 165, 233, 0.45);
+}
+
+/* 日间选中态：浅蓝渐变，干净清爽 */
+body.light .mood-card.active {
+    border-color: #0ea5e9;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+    box-shadow: 0 8px 20px rgba(14, 165, 233, 0.25);
+}
+
+/* 日间模式：情绪日历格子颜色（高优先级，覆盖默认白底） */
+body.light .day-cell.mood-happy {
+    background: rgba(251, 191, 36, 0.25);
+    border-color: rgba(251, 191, 36, 0.6);
+    color: #d97706;
+}
+body.light .day-cell.mood-calm {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: rgba(34, 197, 94, 0.6);
+    color: #16a34a;
+}
+body.light .day-cell.mood-sad {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: rgba(59, 130, 246, 0.6);
+    color: #2563eb;
+}
+body.light .day-cell.mood-angry {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.6);
+    color: #dc2626;
+}
+body.light .day-cell.mood-excited {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: rgba(168, 85, 247, 0.6);
+    color: #9333ea;
+}
+
+/* 日历日期格子：增加相对定位，用于承载悬浮提示 */
+.day-cell {
+    position: relative;
+}
+
+/* 日历日期悬浮提示：灰色背景 */
+.day-cell:hover::after {
+    content: attr(title);
+    position: absolute;
+    background: #6b7280;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 10;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+
+
+
+.mood-card .emoji {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 18px;
+    border-radius: 20px;
+    font-size: 17px;
+}
+
+/* 结束页文字 */
+.end-screen h2 {
+    color: #38bdf8;
+    margin-bottom: 16px;
+}
+.end-screen p {
+    color: #94a3b8;
+}
+
+/* ========== 日间/夜间主题切换 ========== */
+body,
+.card,
+button,
+input,
+textarea,
+select,
+.edit-card,
+.chart-box,
+.chat-bubble,
+.mood-card {
+    transition: background 0.3s ease, color 0.3s ease, 
+                border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 日间模式主题 */
+body.light {
+    background: #f0f7ff;
+    color: #1e293b;
+}
+
+body.light .container h1 {
+    color: #0f172a;
+}
+
+body.light .card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(14, 165, 233, 0.2);
+    color: #334155;
+    box-shadow: 0 8px 28px rgba(14, 165, 233, 0.12);
+}
+
+body.light .card:hover {
+    border-color: rgba(14, 165, 233, 0.4);
+    box-shadow: 0 12px 36px rgba(14, 165, 233, 0.18);
+}
+
+body.light .item label {
+    color: #475569;
+}
+
+body.light input[type="text"],
+body.light input[type="month"],
+body.light textarea,
+body.light select {
+    background: #ffffff;
+    border-color: rgba(14, 165, 233, 0.25);
+    color: #1e293b;
+}
+
+body.light input:focus,
+body.light textarea:focus,
+body.light select:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    background: #fff;
+}
+
+body.light input::placeholder,
+body.light textarea::placeholder {
+    color: #94a3b8;
+}
+
+body.light #pageBox {
+    color: #475569;
+}
+
+body.light .edit-card {
+    background: #ffffff;
+    border-color: rgba(14, 165, 233, 0.2);
+    color: #1e293b;
+}
+
+body.light .edit-card h3 {
+    color: #0284c7;
+}
+
+body.light .chart-box {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(14, 165, 233, 0.2);
+    color: #1e293b;
+    box-shadow: 0 12px 36px rgba(14, 165, 233, 0.15);
+}
+
+body.light #emptyTip {
+    color: #64748b;
+}
+
+body.light .chat-bubble {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(14, 165, 233, 0.2);
+    color: #334155;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.12);
+}
+
+body.light .mood-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(14, 165, 233, 0.18);
+    color: #334155;
+}
+
+body.light .mood-card:hover {
+    border-color: #0ea5e9;
+    background: rgba(14, 165, 233, 0.06);
+}
+
+body.light .end-screen p {
+    color: #64748b;
+}
+
+body.light .end-screen h2 {
+    color: #0284c7;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 1000;
+    padding: 0;
+}
+
+/* ========== 新增日记页气泡文字放大 ========== */
+
+.chat-bubble {
+    padding: 36px 40px;
+    font-size: 30px;
+    line-height: 1.8;
+    border-radius: 28px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+}
+
+/* 日间模式下同步放大 */
+body.light .chat-bubble {
+    padding: 36px 40px;
+    font-size: 24px;
+    line-height: 1.8;
+}
+
+/* 如果你的气泡有最大宽度限制，取消限制 */
+.chat-bubble {
+    max-width: none;
+    width: 100%;
+}
+
+/* 补充情绪输入框 */
+.supplement-mood input {
+    width: 100%;
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 15px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: rgba(15, 23, 42, 0.6);
+    color: #e2e8f0;
+    transition: all 0.25s ease;
+}
+.supplement-mood input:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+}
+.supplement-mood input::placeholder {
+    color: #64748b;
+}
+
+/* 日间模式适配 */
+body.light .supplement-mood input {
+    background: #fff;
+    border-color: rgba(14, 165, 233, 0.25);
+    color: #1e293b;
+}
+
+/* 日间模式：日历标题文字加深 */
+body.light .calendar-title h3 {
+    color: #0f172a;
+}
+body.light .calendar-title p {
+    color: #64748b;
+}
+body.light .week-day {
+    color: #64748b;
+}
+body.light .day-cell {
+    color: #334155;
+}
+
+/* 日间模式：日记卡片文字加深 */
+body.light .card h3 {
+    color: #0f172a;
+}
+body.light .card p {
+    color: #334155;
+}
+body.light .card span {
+    color: #64748b;
+}
+
+/* ========== 悬浮白噪音播放器 ========== */
+.music-player {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 999;
+}
+
+.music-toggle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-list {
+    position: absolute;
+    right: 0;
+    bottom: 64px;
+    width: 200px;
+    border-radius: 16px;
+    padding: 10px;
+    /* 固定灰色背景，不受主题影响 */
+    background: #738290 !important;
+    border: 1px solid #5a656a !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.25s ease;
+}
+
+.music-list.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.music-item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.music-item:last-child {
+    margin-bottom: 0;
+}
+
+.music-item:hover {
+    background: rgba(14, 165, 233, 0.15);
+    color: #fff;
+}
+
+.music-item.playing {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(6, 182, 212, 0.25));
+    color: #38bdf8;
+    font-weight: 500;
+}
+
+/* ========== 左侧情绪小知识卡片（放大版） ========== */
+.mood-tip-card {
+    position: fixed;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    min-height: 420px;
+    padding: 24px;
+    border-radius: 20px;
+    background: rgba(15, 35, 60, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+}
+
+.tip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #38bdf8;
+    font-size: 19px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.tip-refresh {
+    background: transparent;
+    border: none;
+    color: #38bdf8;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 9px;
+    transition: all 0.3s ease;
+}
+
+.tip-refresh:hover {
+    background: rgba(14, 165, 233, 0.15);
+    transform: rotate(180deg);
+}
+
+.tip-content {
+    color: #cbd5e1;
+    font-size: 18px;
+    line-height: 1.9;
+    max-height: 520px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    flex: 1;
+}
+
+.tip-content.collapse {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* 日间模式适配 */
+body.light .mood-tip-card {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(14, 165, 233, 0.22);
+    box-shadow: 0 10px 28px rgba(14, 165, 233, 0.18);
+}
+
+body.light .tip-content {
+    color: #334155;
+}
+
+/* ========== 删除确认弹窗 ========== */
+.confirm-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+}
+
+.confirm-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirm-box {
+    width: 360px;
+    padding: 28px;
+    border-radius: 16px;
+    background: rgba(15, 35, 60, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    transform: translateY(20px);
+    transition: transform 0.25s ease;
+}
+
+.confirm-modal.show .confirm-box {
+    transform: translateY(0);
+}
+
+.confirm-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.confirm-content {
+    font-size: 15px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.confirm-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.confirm-btns .btn {
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e1;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+    color: #fff;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+}
+
+/* 日间模式适配 */
+body.light .confirm-box {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(14, 165, 233, 0.2);
+    box-shadow: 0 20px 60px rgba(14, 165, 233, 0.2);
+}
+
+body.light .confirm-title {
+    color: #0f172a;
+}
+
+body.light .confirm-content {
+    color: #475569;
+}
+
+body.light .btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+body.light .btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+/* ========== Toast 轻量提示 ========== */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast-item {
+    padding: 12px 20px;
+    border-radius: 10px;
+    background: rgba(15, 35, 60, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #e2e8f0;
+    font-size: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+}
+
+.toast-item.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast-item.success {
+    border-color: rgba(34, 197, 94, 0.4);
+    border-left: 4px solid #22c55e;
+}
+
+.toast-item.error {
+    border-color: rgba(239, 68, 68, 0.4);
+    border-left: 4px solid #ef4444;
+}
+
+/* 日间模式适配 */
+body.light .toast-item {
+    background: rgba(255, 255, 255, 0.98);
+    color: #334155;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
+}
+

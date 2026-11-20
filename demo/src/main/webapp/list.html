@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>情绪日记 - 历史记录</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 新增：编辑弹窗心情按钮样式 -->
+    <style>
+        .edit-mood-group {
+            display: flex;
+            gap: 8px;
+            margin: 6px 0 12px;
+            flex-wrap: wrap;
+        }
+        .mood-btn {
+            flex: 1;
+            min-width: 50px;
+            padding: 8px 4px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .mood-btn.active {
+            border-color: #0ea5e9;
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <!-- 主题切换按钮 -->
+    <button class="theme-toggle" id="themeBtn" title="切换日间/夜间模式">🌙</button>
+
+
+    <div class="container">
+        <h1>历史情绪日记</h1>
+
+        <!-- 搜索 + 导入导出 -->
+        <div class="search-bar">
+            <input type="text" id="searchKeyword" placeholder="输入关键词搜索日记...">
+            <button id="searchBtn">搜索</button>
+            <button id="exportBtn">导出全部日记(JSON)</button>
+            <button id="importBtn">导入备份JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;">
+
+        </div>
+
+        <div class="nav-row">
+            <a href="index.html"><button>新建日记</button></a>
+        </div>
+
+        <!-- 日记列表容器 -->
+        <div id="diaryList"></div>
+
+        <div class="nav-row">
+            <a href="stats.html"><button>情绪统计图表</button></a>
+        </div>
+
+        <!-- 分页区域 -->
+        <div id="pageBox">
+            <button id="prevBtn">上一页</button>
+            <span id="pageInfo">第1页</span>
+            <button id="nextBtn">下一页</button>
+        </div>
+    </div>
+
+    <!-- 编辑弹窗 -->
+    <div class="mask" id="editMask">
+        <div class="edit-card">
+            <h3>编辑日记</h3>
+            <div class="item">
+                <label>标题</label>
+                <input type="text" id="editTitle">
+            </div>
+            <div class="item">
+                <label>情绪</label>
+                <div class="edit-mood-group" id="editMoodGroup">
+                    <span class="mood-btn" data-mood="😊 开心">😊 开心</span>
+                    <span class="mood-btn" data-mood="😌 平静">😌 平静</span>
+                    <span class="mood-btn" data-mood="😔 低落">😔 低落</span>
+                    <span class="mood-btn" data-mood="😠 烦躁">😠 烦躁</span>
+                    <span class="mood-btn" data-mood="🤩 兴奋">🤩 兴奋</span>
+                </div>
+
+                <!-- 隐藏域存储选中值，兼容原有保存逻辑 -->
+                <input type="hidden" id="editMood">
+            </div>
+            <div class="item">
+                <label>内容</label>
+                <textarea id="editContent" rows="5"></textarea>
+            </div>
+            <input type="hidden" id="editId">
+            <div class="nav-row" style="text-align:right;">
+                <button id="cancelEdit">取消</button>
+                <button id="saveEdit">保存修改</button>
+            </div>
+        </div>
+    </div>
+
+            <!-- 左侧情绪小知识卡片 -->
+    <div class="mood-tip-card">
+        <div class="tip-header">
+            <span>💡 情绪小知识</span>
+            <button class="tip-refresh" id="tipRefresh" title="换一条">🔄</button>
+        </div>
+        <div class="tip-content" id="tipContent">
+            接纳所有情绪，没有所谓的“坏情绪”，每一种感受都有它的意义。
+        </div>
+    </div>
+
+        <!-- 悬浮白噪音播放器 -->
+    <div class="music-player">
+        <button class="music-toggle" id="musicToggle" title="自然白噪音">🎵</button>
+        <div class="music-list" id="musicList" >
+            <div class="music-item" data-src="audio/白浪逐沙.mp3">🌊 白浪逐沙</div>
+            <div class="music-item" data-src="audio/潺潺流溪.mp3">💧 潺潺流溪</div>
+            <div class="music-item" data-src="audio/林间鸟语.mp3">🐦 林间鸟语</div>
+            <div class="music-item" data-src="audio/暖意篝火.mp3">🔥 暖意篝火</div>
+            <div class="music-item" data-src="audio/夏夜虫鸣.mp3">🦗 夏夜虫鸣</div>
+            <div class="music-item" data-src="audio/闲时听雨.mp3">🌧️ 闲时听雨</div>
+            <div class="music-item" data-src="audio/云隙来风.mp3">🍃 云隙来风</div>
+        </div>
+        
+    </div>
+    <audio id="bgAudio" loop></audio>
+
+        <!-- 删除确认弹窗 -->
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-box">
+            <div class="confirm-title">温馨提示</div>
+            <div class="confirm-content">确定要删除这条日记吗？删除后无法恢复。</div>
+            <div class="confirm-btns">
+                <button class="btn btn-cancel" id="confirmCancel">取消</button>
+                <button class="btn btn-confirm" id="confirmOk">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Toast 提示容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+<script src="api.js"></script>
+<script src="list.js"></script>
+</body>
+</html>
